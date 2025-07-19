@@ -1,5 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Between the Brackets</title><link href="https://azad2171.github.io/" rel="alternate"/><link href="https://azad2171.github.io/feeds/all.atom.xml" rel="self"/><id>https://azad2171.github.io/</id><updated>2025-07-18T22:00:00+05:30</updated><entry><title>Why Integer Math Is So Much Faster Than Floating-Point</title><link href="https://azad2171.github.io/why-integer-math-is-so-much-faster-than-floating-point.html" rel="alternate"/><published>2025-07-18T22:00:00+05:30</published><updated>2025-07-18T22:00:00+05:30</updated><author><name>Lovekesh Azad</name></author><id>tag:azad2171.github.io,2025-07-18:/why-integer-math-is-so-much-faster-than-floating-point.html</id><summary type="html">&lt;p&gt;In the world of high-performance computing, and especially in high, frequency trading (HFT) - nanoseconds matter. As a developer learning C++, understanding why some operations are faster than others isn’t just an academic curiosity. It’s the beginning of writing better, faster, and more predictable code.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Between the Brackets</title><link href="https://azad2171.github.io/" rel="alternate"/><link href="https://azad2171.github.io/feeds/all.atom.xml" rel="self"/><id>https://azad2171.github.io/</id><updated>2025-07-20T22:00:00+05:30</updated><entry><title>Why Your C++ Loop Might Not Be Running at All: Understanding the `volatile` Keyword and Compiler Optimizations</title><link href="https://azad2171.github.io/why-your-c-loop-might-not-be-running-at-all-understanding-the-volatile-keyword-and-compiler-optimizations.html" rel="alternate"/><published>2025-07-20T22:00:00+05:30</published><updated>2025-07-20T22:00:00+05:30</updated><author><name>Lovekesh Azad</name></author><id>tag:azad2171.github.io,2025-07-20:/why-your-c-loop-might-not-be-running-at-all-understanding-the-volatile-keyword-and-compiler-optimizations.html</id><summary type="html">&lt;!-- # Why Your C++ Loop Might Not Be Running at All: Understanding the `volatile` Keyword and Compiler Optimizations --&gt;
+
+&lt;p&gt;In C++, writing a loop that counts from 1 to a billion feels like a sure way to consume time and CPU cycles. But what if your loop - even with all its iterations - &lt;strong&gt;doesn’t run at all&lt;/strong&gt;? Or what if your carefully written benchmark gets replaced by a single …&lt;/p&gt;</summary><content type="html">&lt;!-- # Why Your C++ Loop Might Not Be Running at All: Understanding the `volatile` Keyword and Compiler Optimizations --&gt;
+
+&lt;p&gt;In C++, writing a loop that counts from 1 to a billion feels like a sure way to consume time and CPU cycles. But what if your loop - even with all its iterations - &lt;strong&gt;doesn’t run at all&lt;/strong&gt;? Or what if your carefully written benchmark gets replaced by a single line of code?&lt;/p&gt;
+&lt;p&gt;Welcome to the world of &lt;strong&gt;modern compiler optimizations&lt;/strong&gt;, where the compiler often knows better than you - and isn't afraid to prove it.&lt;/p&gt;
+&lt;p&gt;This article introduces a critical concept in C++: the &lt;code&gt;volatile&lt;/code&gt; keyword, and why your code may not behave the way you think it will - especially when performance is involved.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2&gt;The Problem: A Loop That “Should” Take Time&lt;/h2&gt;
+&lt;p&gt;Let’s take a look at this innocent-looking C++ code:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="cp"&gt;#include&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="cpf"&gt;&amp;lt;iostream&amp;gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="cpf"&gt;&amp;lt;chrono&amp;gt;&lt;/span&gt;
+
+&lt;span class="kt"&gt;int&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;long&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;long&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;iterations&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;1&amp;#39;000&amp;#39;000&amp;#39;000&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="kt"&gt;long&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;long&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;sink&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="k"&gt;auto&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;start&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;chrono&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;high_resolution_clock&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;now&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;long&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;long&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;iterations&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="n"&gt;sink&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;+=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="k"&gt;auto&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;end&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;chrono&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;high_resolution_clock&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;now&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="kt"&gt;long&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;long&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;nanoseconds&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;chrono&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;duration_cast&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;chrono&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;nanoseconds&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;end&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;start&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="n"&gt;count&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;cout&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Result: &amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;sink&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;endl&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;cout&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Time: &amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;nanoseconds&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s"&gt;&amp;quot; nanoseconds&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;endl&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="k"&gt;return&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;This code should, at a glance, take a few hundred milliseconds, maybe even a second, to run a &lt;strong&gt;billion&lt;/strong&gt; additions.&lt;/p&gt;
+&lt;p&gt;And yet, when compiled in &lt;strong&gt;Release mode&lt;/strong&gt;, you might see output like this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;Result&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;1000000000&lt;/span&gt;&lt;span class="w"&gt;  &lt;/span&gt;
+&lt;span class="n"&gt;Time&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;150&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;nanoseconds&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Wait - what?&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2&gt;What Happened: The Compiler Outsmarted You&lt;/h2&gt;
+&lt;p&gt;The compiler looked at this loop and thought:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;“You're just adding 1 a billion times? I know how this ends.”&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;And instead of generating machine code for a billion iterations, it optimized the loop into this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;sink&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;1&amp;#39;000&amp;#39;000&amp;#39;000&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;No loop. No wasted CPU cycles. Just the final result, instantly.&lt;/p&gt;
+&lt;p&gt;The output is correct i.e. &lt;code&gt;sink&lt;/code&gt; is &lt;code&gt;1,000,000,000&lt;/code&gt; - but the loop never actually ran.&lt;/p&gt;
+&lt;p&gt;This is an example of &lt;strong&gt;dead code elimination&lt;/strong&gt; and &lt;strong&gt;loop strength reduction&lt;/strong&gt;, two standard optimizations in modern compilers like MSVC, Clang, and GCC.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2&gt;Introducing &lt;code&gt;volatile&lt;/code&gt;: Your Code’s Bodyguard&lt;/h2&gt;
+&lt;p&gt;To stop the compiler from doing this, we can use the &lt;code&gt;volatile&lt;/code&gt; keyword:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;volatile&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;long&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;long&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;sink&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;This keyword tells the compiler:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;“Do not optimize reads or writes to this variable. Every access is important, even if it seems pointless to you.”&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;With &lt;code&gt;volatile&lt;/code&gt;, the compiler is forced to generate real instructions for every addition, and now the loop takes &lt;strong&gt;real time&lt;/strong&gt; to run. You might see:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;Result&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;1000000000&lt;/span&gt;&lt;span class="w"&gt;  &lt;/span&gt;
+&lt;span class="n"&gt;Time&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;450000000&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;nanoseconds&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;That’s more like it.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2&gt;What Exactly Does &lt;code&gt;volatile&lt;/code&gt; Do?&lt;/h2&gt;
+&lt;p&gt;In C++, &lt;code&gt;volatile&lt;/code&gt; is a type qualifier that instructs the compiler:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Do not cache this variable in a register.&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Do not remove or merge reads/writes.&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Assume this variable might be changed by something outside your current code.&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;It’s commonly used in embedded systems and multithreaded contexts where variables might change due to hardware or background processes.&lt;/p&gt;
+&lt;p&gt;In our case, it's used as a &lt;strong&gt;benchmarking hack&lt;/strong&gt; - we don’t want the compiler to optimize our code away while we’re trying to measure it.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2&gt;When Not to Use &lt;code&gt;volatile&lt;/code&gt;&lt;/h2&gt;
+&lt;p&gt;It’s tempting to use &lt;code&gt;volatile&lt;/code&gt; everywhere once you discover it, but resist that urge.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;It &lt;strong&gt;does not make your code thread-safe&lt;/strong&gt;.&lt;/li&gt;
+&lt;li&gt;It can &lt;strong&gt;reduce performance&lt;/strong&gt; by disabling useful optimizations.&lt;/li&gt;
+&lt;li&gt;It should be reserved for &lt;strong&gt;rare, specific scenarios&lt;/strong&gt; like memory-mapped hardware or precise timing measurements.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Use it sparingly, and only when you truly need to prevent the compiler from reordering or eliminating reads/writes.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2&gt;Key Takeaways&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Modern C++ compilers are extremely aggressive&lt;/strong&gt; about optimizing your code - even to the point of deleting entire loops.&lt;/li&gt;
+&lt;li&gt;The keyword &lt;code&gt;volatile&lt;/code&gt; tells the compiler: &lt;em&gt;“Hands off. Don’t optimize this.”&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;If you're benchmarking or dealing with low-level systems, knowing when and how to use &lt;code&gt;volatile&lt;/code&gt; is essential.&lt;/li&gt;
+&lt;li&gt;Don't assume your code is running just because you wrote it - &lt;strong&gt;always measure, and always verify&lt;/strong&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;blockquote&gt;
+&lt;p&gt;“The best performance improvement is the one your compiler gives you for free - unless it gives you &lt;em&gt;zero&lt;/em&gt;.”&lt;br&gt;
+— &lt;em&gt;A C++ developer, watching their loop vanish into thin air&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</content><category term="Programming"/><category term="C++"/><category term="VOLATILE"/><category term="Low Latency Programming"/></entry><entry><title>Why Integer Math Is So Much Faster Than Floating-Point</title><link href="https://azad2171.github.io/why-integer-math-is-so-much-faster-than-floating-point.html" rel="alternate"/><published>2025-07-18T22:00:00+05:30</published><updated>2025-07-18T22:00:00+05:30</updated><author><name>Lovekesh Azad</name></author><id>tag:azad2171.github.io,2025-07-18:/why-integer-math-is-so-much-faster-than-floating-point.html</id><summary type="html">&lt;p&gt;In the world of high-performance computing, and especially in high, frequency trading (HFT) - nanoseconds matter. As a developer learning C++, understanding why some operations are faster than others isn’t just an academic curiosity. It’s the beginning of writing better, faster, and more predictable code.&lt;/p&gt;
 &lt;p&gt;In this chapter, we …&lt;/p&gt;</summary><content type="html">&lt;p&gt;In the world of high-performance computing, and especially in high, frequency trading (HFT) - nanoseconds matter. As a developer learning C++, understanding why some operations are faster than others isn’t just an academic curiosity. It’s the beginning of writing better, faster, and more predictable code.&lt;/p&gt;
 &lt;p&gt;In this chapter, we’ll answer a seemingly simple question:&lt;/p&gt;
 &lt;h2&gt;Why is integer math faster than floating-point math?&lt;/h2&gt;

@@ -1,0 +1,17 @@
+:not(pre) > code {
+    background-color: #f0f0f0; /* A light grey background */
+    color: #c7254e;           /* A reddish color for the text */
+    padding: 2px 4px;         /* A little bit of space inside the box */
+    border-radius: 4px;       /* Slightly rounded corners */
+    font-size: 90%;           /* Make it slightly smaller than surrounding text */
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+}
+
+
+/*
+ * Optional: Improve the styling of larger code blocks (fenced by ```).
+ * This adds a bit more padding and ensures consistency.
+ */
+.highlight pre {
+    padding: 16px; /* More padding for bigger blocks */
+}
