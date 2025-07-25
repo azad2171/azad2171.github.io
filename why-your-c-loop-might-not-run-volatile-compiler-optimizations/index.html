@@ -7,19 +7,23 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
 
-  <title>Why Your C++ Loop Might Not Be Running at All: Understanding the `volatile` Keyword and Compiler Optimizations</title>
+  <title>Why Your C++ Loop Might Not Run: Volatile & Compiler Optimizations</title>
 
 
   <meta name="HandheldFriendly" content="True" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="referrer" content="origin" />
   <meta name="generator" content="Pelican" />
-<link href="https://azad2171.github.io/why-your-c-loop-might-not-be-running-at-all-understanding-the-volatile-keyword-and-compiler-optimizations.html" rel="canonical" />
+<link href="https://azad2171.github.io/why-your-c-loop-might-not-run-volatile-compiler-optimizations/" rel="canonical" />
   <!-- Feed -->
   <link href="https://azad2171.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
     title="Between the Brackets Full Atom Feed" />
+  <link href="https://azad2171.github.io/feeds/all.rss.xml" type="application/rss+xml" rel="alternate"
+    title="Between the Brackets Full RSS Feed" />
   <link href="https://azad2171.github.io/feeds/programming.atom.xml" type="application/atom+xml"
     rel="alternate" title="Between the Brackets Categories Atom Feed" />
+  <link href="https://azad2171.github.io/feeds/programming.rss.xml" type="application/rss+xml"
+    rel="alternate" title="Between the Brackets Categories RSS Feed" />
 
   <link rel="stylesheet" type="text/css" href="https://azad2171.github.io/theme/css/style.css">
 
@@ -59,7 +63,7 @@
 
 
 
-    <meta name="description" content="In C++, writing a loop that counts from 1 to a billion feels like a sure way to consume time and CPU cycles. But what if your loop -...">
+    <meta name="description" content="Learn how the volatile keyword and compiler optimizations affect control flow in low-latency C++ code.">
 
     <meta name="author" content="Lovekesh Azad">
 
@@ -72,10 +76,10 @@
 
 <!-- Open Graph -->
 <meta prefix="og: http://ogp.me/ns#" property="og:site_name" content="Between the Brackets"/>
-<meta prefix="og: http://ogp.me/ns#" property="og:title" content="Why Your C++ Loop Might Not Be Running at All: Understanding the `volatile` Keyword and Compiler Optimizations"/>
-<meta prefix="og: http://ogp.me/ns#" property="og:description" content="In C++, writing a loop that counts from 1 to a billion feels like a sure way to consume time and CPU cycles. But what if your loop -..."/>
+<meta prefix="og: http://ogp.me/ns#" property="og:title" content="Why Your C++ Loop Might Not Run: Volatile & Compiler Optimizations"/>
+<meta prefix="og: http://ogp.me/ns#" property="og:description" content="Learn how the volatile keyword and compiler optimizations affect control flow in low-latency C++ code."/>
 <meta prefix="og: http://ogp.me/ns#" property="og:locale" content="en_US"/>
-<meta prefix="og: http://ogp.me/ns#" property="og:url" content="https://azad2171.github.io/why-your-c-loop-might-not-be-running-at-all-understanding-the-volatile-keyword-and-compiler-optimizations.html"/>
+<meta prefix="og: http://ogp.me/ns#" property="og:url" content="https://azad2171.github.io/why-your-c-loop-might-not-run-volatile-compiler-optimizations/"/>
 <meta prefix="og: http://ogp.me/ns#" property="og:type" content="article"/>
 <meta prefix="og: http://ogp.me/ns#" property="article:published_time" content="2025-07-20 22:00:00+05:30"/>
 <meta prefix="og: http://ogp.me/ns#" property="article:modified_time" content=""/>
@@ -92,8 +96,8 @@
 {
   "@context": "http://schema.org",
   "@type": "Article",
-  "name": "Why Your C++ Loop Might Not Be Running at All: Understanding the `volatile` Keyword and Compiler Optimizations",
-  "headline": "Why Your C++ Loop Might Not Be Running at All: Understanding the `volatile` Keyword and Compiler Optimizations",
+  "name": "Why Your C++ Loop Might Not Run: Volatile & Compiler Optimizations",
+  "headline": "Why Your C++ Loop Might Not Run: Volatile & Compiler Optimizations",
   "datePublished": "2025-07-20 22:00:00+05:30",
   "dateModified": "",
   "author": {
@@ -102,8 +106,8 @@
     "url": "https://azad2171.github.io/author/lovekesh-azad.html"
   },
   "image": "https://azad2171.github.io/theme/images/post-bg.jpg",
-  "url": "https://azad2171.github.io/why-your-c-loop-might-not-be-running-at-all-understanding-the-volatile-keyword-and-compiler-optimizations.html",
-  "description": "In C++, writing a loop that counts from 1 to a billion feels like a sure way to consume time and CPU cycles. But what if your loop -..."
+  "url": "https://azad2171.github.io/why-your-c-loop-might-not-run-volatile-compiler-optimizations/",
+  "description": "Learn how the volatile keyword and compiler optimizations affect control flow in low-latency C++ code."
 }
 </script>
 </head>
@@ -157,7 +161,7 @@
           <span class="post-type">Article</span>
           <span class="post-count">Programming</span>
         </span>
-        <h1 class="post-title">Why Your C++ Loop Might Not Be Running at All: Understanding the `volatile` Keyword and Compiler Optimizations</h1>
+        <h1 class="post-title">Why Your C++ Loop Might Not Run: Volatile & Compiler Optimizations</h1>
         <div class="post-meta">
           <div class="post-meta-avatars">
 
@@ -182,8 +186,7 @@
         <article class="post">
         <div class="inner">
           <section class="post-content">
-            <!-- # Why Your C++ Loop Might Not Be Running at All: Understanding the `volatile` Keyword and Compiler Optimizations -->
-
+            <h1>Understanding the <code>volatile</code> Keyword and Compiler Optimizations</h1>
 <p>In C++, writing a loop that counts from 1 to a billion feels like a sure way to consume time and CPU cycles. But what if your loop - even with all its iterations - <strong>doesn’t run at all</strong>? Or what if your carefully written benchmark gets replaced by a single line of code?</p>
 <p>Welcome to the world of <strong>modern compiler optimizations</strong>, where the compiler often knows better than you - and isn't afraid to prove it.</p>
 <p>This article introduces a critical concept in C++: the <code>volatile</code> keyword, and why your code may not behave the way you think it will - especially when performance is involved.</p>
@@ -282,22 +285,23 @@
 <p>“The best performance improvement is the one your compiler gives you for free - unless it gives you <em>zero</em>.”<br>
 — <em>A C++ developer, watching their loop vanish into thin air</em></p>
 </blockquote>
+<p>If you’re new to low-level benchmarking, you might also like <a href="from-python-to-nanoseconds-understanding-c-build-modes-through-a-simple-timing-benchmark.html">this article on build modes</a>.</p>
           </section>
 
 
           <section class="post-footer" >
             <div class="post-share">
               <span class="post-info-label">Share</span>
-              <a title="Twitter" aria-label="Twitter" class="twitter" href="https://twitter.com/share?text=Why Your C++ Loop Might Not Be Running at All: Understanding the `volatile` Keyword and Compiler Optimizations&amp;url=https://azad2171.github.io/why-your-c-loop-might-not-be-running-at-all-understanding-the-volatile-keyword-and-compiler-optimizations.html" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+              <a title="Twitter" aria-label="Twitter" class="twitter" href="https://twitter.com/share?text=Why Your C++ Loop Might Not Run: Volatile & Compiler Optimizations&amp;url=https://azad2171.github.io/why-your-c-loop-might-not-run-volatile-compiler-optimizations/" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
                 <i class="icon icon-twitter" aria-hidden="true"></i><span class="hidden">Twitter</span>
               </a>
-              <a title="Facebook" aria-label="Facebook" class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://azad2171.github.io/why-your-c-loop-might-not-be-running-at-all-understanding-the-volatile-keyword-and-compiler-optimizations.html" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+              <a title="Facebook" aria-label="Facebook" class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://azad2171.github.io/why-your-c-loop-might-not-run-volatile-compiler-optimizations/" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
                 <i class="icon icon-facebook" aria-hidden="true"></i><span class="hidden">Facebook</span>
               </a>
-              <a title="LinkedIn" aria-label="LinkedIn" class="linkedin" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https://azad2171.github.io/why-your-c-loop-might-not-be-running-at-all-understanding-the-volatile-keyword-and-compiler-optimizations.html&amp;title=Why Your C++ Loop Might Not Be Running at All: Understanding the `volatile` Keyword and Compiler Optimizations" onclick="window.open(this.href, 'linkedin-share', 'width=930,height=720');return false;">
+              <a title="LinkedIn" aria-label="LinkedIn" class="linkedin" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https://azad2171.github.io/why-your-c-loop-might-not-run-volatile-compiler-optimizations/&amp;title=Why Your C++ Loop Might Not Run: Volatile & Compiler Optimizations" onclick="window.open(this.href, 'linkedin-share', 'width=930,height=720');return false;">
                 <i class="icon icon-linkedin" aria-hidden="true"></i><span class="hidden">LinkedIn</span>
               </a>
-              <a title="Email" aria-label="Email" class="email" href="mailto:?subject=Why Your C++ Loop Might Not Be Running at All: Understanding the `volatile` Keyword and Compiler Optimizations&amp;body=https://azad2171.github.io/why-your-c-loop-might-not-be-running-at-all-understanding-the-volatile-keyword-and-compiler-optimizations.html">
+              <a title="Email" aria-label="Email" class="email" href="mailto:?subject=Why Your C++ Loop Might Not Run: Volatile & Compiler Optimizations&amp;body=https://azad2171.github.io/why-your-c-loop-might-not-run-volatile-compiler-optimizations/">
                 <i class="icon icon-mail" aria-hidden="true"></i><span class="hidden">Email</span>
               </a>
               <div class="clear"></div>
@@ -313,6 +317,14 @@
 
 
           <aside class="post-nav">
+            <a class="post-nav-prev" href="https://azad2171.github.io/why-integer-math-is-faster-than-floating-point/">
+              <section class="post-nav-teaser">
+                <i class="icon icon-arrow-right"></i>
+                  <h2 class="post-nav-title">Why Integer Math Is So Much Faster Than Floating-Point</h2>
+                <p class="post-nav-excerpt">Discover why integer operations outperform floating-point math in C++ and how it...</p>
+                <p class="post-nav-meta"><time datetime="Fri 18 July 2025">Fri 18 July 2025</time></p>
+              </section>
+            </a>
             <div class="clear"></div>
           </aside>
 

@@ -7,19 +7,23 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
 
-  <title>From Python to Nanoseconds: Understanding C++ Build Modes Through a Simple Timing Benchmark</title>
+  <title>From Python to Nanoseconds: C++ Build Modes Explained</title>
 
 
   <meta name="HandheldFriendly" content="True" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="referrer" content="origin" />
   <meta name="generator" content="Pelican" />
-<link href="https://azad2171.github.io/from-python-to-nanoseconds-understanding-c-build-modes-through-a-simple-timing-benchmark.html" rel="canonical" />
+<link href="https://azad2171.github.io/from-python-to-nanoseconds/" rel="canonical" />
   <!-- Feed -->
   <link href="https://azad2171.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
     title="Between the Brackets Full Atom Feed" />
-  <link href="https://azad2171.github.io/feeds/programming.atom.xml" type="application/atom+xml"
+  <link href="https://azad2171.github.io/feeds/all.rss.xml" type="application/rss+xml" rel="alternate"
+    title="Between the Brackets Full RSS Feed" />
+  <link href="https://azad2171.github.io/feeds/misc.atom.xml" type="application/atom+xml"
     rel="alternate" title="Between the Brackets Categories Atom Feed" />
+  <link href="https://azad2171.github.io/feeds/misc.rss.xml" type="application/rss+xml"
+    rel="alternate" title="Between the Brackets Categories RSS Feed" />
 
   <link rel="stylesheet" type="text/css" href="https://azad2171.github.io/theme/css/style.css">
 
@@ -59,31 +63,31 @@
 
 
 
-    <meta name="description" content="If you’re a developer transitioning to C++, one of the first things you'll notice is how much emphasis the language places on the build...">
+    <meta name="description" content="A practical guide comparing Python and C++ timing, and how C++ build modes impact performance.">
 
     <meta name="author" content="Lovekesh Azad">
 
-    <meta name="tags" content="C++">
-    <meta name="tags" content="HFT">
-    <meta name="tags" content="Low Latency Programming">
+    <meta name="tags" content="c++">
+    <meta name="tags" content="optimization">
+    <meta name="tags" content="performance">
 
 
 
 
 <!-- Open Graph -->
 <meta prefix="og: http://ogp.me/ns#" property="og:site_name" content="Between the Brackets"/>
-<meta prefix="og: http://ogp.me/ns#" property="og:title" content="From Python to Nanoseconds: Understanding C++ Build Modes Through a Simple Timing Benchmark"/>
-<meta prefix="og: http://ogp.me/ns#" property="og:description" content="If you’re a developer transitioning to C++, one of the first things you'll notice is how much emphasis the language places on the build..."/>
+<meta prefix="og: http://ogp.me/ns#" property="og:title" content="From Python to Nanoseconds: C++ Build Modes Explained"/>
+<meta prefix="og: http://ogp.me/ns#" property="og:description" content="A practical guide comparing Python and C++ timing, and how C++ build modes impact performance."/>
 <meta prefix="og: http://ogp.me/ns#" property="og:locale" content="en_US"/>
-<meta prefix="og: http://ogp.me/ns#" property="og:url" content="https://azad2171.github.io/from-python-to-nanoseconds-understanding-c-build-modes-through-a-simple-timing-benchmark.html"/>
+<meta prefix="og: http://ogp.me/ns#" property="og:url" content="https://azad2171.github.io/from-python-to-nanoseconds/"/>
 <meta prefix="og: http://ogp.me/ns#" property="og:type" content="article"/>
 <meta prefix="og: http://ogp.me/ns#" property="article:published_time" content="2025-07-17 02:00:00+05:30"/>
 <meta prefix="og: http://ogp.me/ns#" property="article:modified_time" content=""/>
 <meta prefix="og: http://ogp.me/ns#" property="article:author" content="https://azad2171.github.io/author/lovekesh-azad.html">
-<meta prefix="og: http://ogp.me/ns#" property="article:section" content="Programming"/>
-<meta prefix="og: http://ogp.me/ns#" property="article:tag" content="C++"/>
-<meta prefix="og: http://ogp.me/ns#" property="article:tag" content="HFT"/>
-<meta prefix="og: http://ogp.me/ns#" property="article:tag" content="Low Latency Programming"/>
+<meta prefix="og: http://ogp.me/ns#" property="article:section" content="misc"/>
+<meta prefix="og: http://ogp.me/ns#" property="article:tag" content="c++"/>
+<meta prefix="og: http://ogp.me/ns#" property="article:tag" content="optimization"/>
+<meta prefix="og: http://ogp.me/ns#" property="article:tag" content="performance"/>
 <meta prefix="og: http://ogp.me/ns#" property="og:image" content="https://azad2171.github.io/theme/images/home-bg.jpg">
 
 <!-- Twitter Card -->
@@ -92,8 +96,8 @@
 {
   "@context": "http://schema.org",
   "@type": "Article",
-  "name": "From Python to Nanoseconds: Understanding C++ Build Modes Through a Simple Timing Benchmark",
-  "headline": "From Python to Nanoseconds: Understanding C++ Build Modes Through a Simple Timing Benchmark",
+  "name": "From Python to Nanoseconds: C++ Build Modes Explained",
+  "headline": "From Python to Nanoseconds: C++ Build Modes Explained",
   "datePublished": "2025-07-17 02:00:00+05:30",
   "dateModified": "",
   "author": {
@@ -102,8 +106,8 @@
     "url": "https://azad2171.github.io/author/lovekesh-azad.html"
   },
   "image": "https://azad2171.github.io/theme/images/post-bg.jpg",
-  "url": "https://azad2171.github.io/from-python-to-nanoseconds-understanding-c-build-modes-through-a-simple-timing-benchmark.html",
-  "description": "If you’re a developer transitioning to C++, one of the first things you'll notice is how much emphasis the language places on the build..."
+  "url": "https://azad2171.github.io/from-python-to-nanoseconds/",
+  "description": "A practical guide comparing Python and C++ timing, and how C++ build modes impact performance."
 }
 </script>
 </head>
@@ -155,9 +159,9 @@
       <div class="inner">
         <span class="post-info">
           <span class="post-type">Article</span>
-          <span class="post-count">Programming</span>
+          <span class="post-count">Misc</span>
         </span>
-        <h1 class="post-title">From Python to Nanoseconds: Understanding C++ Build Modes Through a Simple Timing Benchmark</h1>
+        <h1 class="post-title">From Python to Nanoseconds: C++ Build Modes Explained</h1>
         <div class="post-meta">
           <div class="post-meta-avatars">
 
@@ -182,8 +186,7 @@
         <article class="post">
         <div class="inner">
           <section class="post-content">
-            <!-- # From Python to Nanoseconds: Understanding C++ Build Modes Through a Simple Timing Benchmark -->
-
+            <h1>Understanding C++ Build Modes Through a Simple Timing Benchmark</h1>
 <p>If you’re a developer transitioning to C++, one of the first things you'll notice is how much emphasis the language places on the build process -and how much performance can hinge on compiler settings.</p>
 <p>This post is a crash course in one of C++’s most powerful (and misunderstood) features: the difference between <strong>Debug</strong> and <strong>Release</strong> builds -and how your choice can mean the difference between seconds and nanoseconds.</p>
 <p>We’ll walk through:</p>
@@ -342,29 +345,30 @@ I’ll be exploring C++ from the perspective of a Python dev with a quant backgr
 <p>But even if you're not into finance, understanding how the compiler works is a <strong>C++ superpower</strong>.</p>
 </blockquote>
 <p><strong>Happy coding - and may your nanoseconds be few.</strong></p>
+<p>For another deep dive into performance, check out <a href="why-integer-math-is-so-much-faster-than-floating-point.html">why integer math is faster than floating point</a>.</p>
           </section>
 
 
           <section class="post-footer" >
             <div class="post-share">
               <span class="post-info-label">Share</span>
-              <a title="Twitter" aria-label="Twitter" class="twitter" href="https://twitter.com/share?text=From Python to Nanoseconds: Understanding C++ Build Modes Through a Simple Timing Benchmark&amp;url=https://azad2171.github.io/from-python-to-nanoseconds-understanding-c-build-modes-through-a-simple-timing-benchmark.html" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+              <a title="Twitter" aria-label="Twitter" class="twitter" href="https://twitter.com/share?text=From Python to Nanoseconds: C++ Build Modes Explained&amp;url=https://azad2171.github.io/from-python-to-nanoseconds/" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
                 <i class="icon icon-twitter" aria-hidden="true"></i><span class="hidden">Twitter</span>
               </a>
-              <a title="Facebook" aria-label="Facebook" class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://azad2171.github.io/from-python-to-nanoseconds-understanding-c-build-modes-through-a-simple-timing-benchmark.html" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+              <a title="Facebook" aria-label="Facebook" class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://azad2171.github.io/from-python-to-nanoseconds/" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
                 <i class="icon icon-facebook" aria-hidden="true"></i><span class="hidden">Facebook</span>
               </a>
-              <a title="LinkedIn" aria-label="LinkedIn" class="linkedin" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https://azad2171.github.io/from-python-to-nanoseconds-understanding-c-build-modes-through-a-simple-timing-benchmark.html&amp;title=From Python to Nanoseconds: Understanding C++ Build Modes Through a Simple Timing Benchmark" onclick="window.open(this.href, 'linkedin-share', 'width=930,height=720');return false;">
+              <a title="LinkedIn" aria-label="LinkedIn" class="linkedin" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https://azad2171.github.io/from-python-to-nanoseconds/&amp;title=From Python to Nanoseconds: C++ Build Modes Explained" onclick="window.open(this.href, 'linkedin-share', 'width=930,height=720');return false;">
                 <i class="icon icon-linkedin" aria-hidden="true"></i><span class="hidden">LinkedIn</span>
               </a>
-              <a title="Email" aria-label="Email" class="email" href="mailto:?subject=From Python to Nanoseconds: Understanding C++ Build Modes Through a Simple Timing Benchmark&amp;body=https://azad2171.github.io/from-python-to-nanoseconds-understanding-c-build-modes-through-a-simple-timing-benchmark.html">
+              <a title="Email" aria-label="Email" class="email" href="mailto:?subject=From Python to Nanoseconds: C++ Build Modes Explained&amp;body=https://azad2171.github.io/from-python-to-nanoseconds/">
                 <i class="icon icon-mail" aria-hidden="true"></i><span class="hidden">Email</span>
               </a>
               <div class="clear"></div>
             </div>
 
             <aside class="post-tags">
-<a href="https://azad2171.github.io/tag/c.html">C++</a><a href="https://azad2171.github.io/tag/hft.html">HFT</a><a href="https://azad2171.github.io/tag/low-latency-programming.html">Low Latency Programming</a>            </aside>
+<a href="https://azad2171.github.io/tag/c.html">c++</a><a href="https://azad2171.github.io/tag/optimization.html">optimization</a><a href="https://azad2171.github.io/tag/performance.html">performance</a>            </aside>
 
             <div class="clear"></div>
 
@@ -373,6 +377,14 @@ I’ll be exploring C++ from the perspective of a Python dev with a quant backgr
 
 
           <aside class="post-nav">
+            <a class="post-nav-next" href="https://azad2171.github.io/why-integer-math-is-faster-than-floating-point/">
+              <section class="post-nav-teaser">
+                <i class="icon icon-arrow-left"></i>
+                  <h2 class="post-nav-title">Why Integer Math Is So Much Faster Than Floating-Point</h2>
+                <p class="post-nav-excerpt">Discover why integer operations outperform floating-point math in C++ and how it...</p>
+                <p class="post-nav-meta"><time datetime="Fri 18 July 2025">Fri 18 July 2025</time></p>
+              </section>
+            </a>
             <div class="clear"></div>
           </aside>
 
