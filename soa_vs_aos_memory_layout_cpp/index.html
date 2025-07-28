@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+
+  <title>Structure of Arrays (SoA) vs Array of Structures (AoS) in C++: A Deep Dive into Cache-Optimized Performance</title>
+
+
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="referrer" content="origin" />
+  <meta name="generator" content="Pelican" />
+<link href="https://azad2171.github.io/soa_vs_aos_memory_layout_cpp/" rel="canonical" />
+  <!-- Feed -->
+  <link href="https://azad2171.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+    title="Between the Brackets Full Atom Feed" />
+  <link href="https://azad2171.github.io/feeds/all.rss.xml" type="application/rss+xml" rel="alternate"
+    title="Between the Brackets Full RSS Feed" />
+  <link href="https://azad2171.github.io/feeds/programming.atom.xml" type="application/atom+xml"
+    rel="alternate" title="Between the Brackets Categories Atom Feed" />
+  <link href="https://azad2171.github.io/feeds/programming.rss.xml" type="application/rss+xml"
+    rel="alternate" title="Between the Brackets Categories RSS Feed" />
+
+  <link rel="stylesheet" type="text/css" href="https://azad2171.github.io/theme/css/style.css">
+
+
+  <!-- Custom fonts -->
+  <link href='https://fonts.googleapis.com/css?family=Montserrat:400,300' rel='stylesheet' type='text/css' />
+  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css" />
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+  <script>
+    var siteUrl = 'https://azad2171.github.io';
+  </script>
+
+  <script>
+    var localTheme = localStorage.getItem('attila_theme');
+    switch (localTheme) {
+      case 'dark':
+        document.documentElement.classList.add('theme-dark');
+        break;
+      case 'light':
+        document.documentElement.classList.add('theme-light');
+        break;
+      default:
+        break;
+    }
+  </script>
+
+
+
+
+
+
+
+    <meta name="description" content="Learn how the way you structure your data, as a Structure of Arrays (SoA) or Array of Structures (AoS), can significantly affect...">
+
+    <meta name="author" content="Lovekesh Azad">
+
+    <meta name="tags" content="C++">
+    <meta name="tags" content="Structure of Arrays">
+    <meta name="tags" content="Array of Structures">
+    <meta name="tags" content="Memory Layout Optimization">
+    <meta name="tags" content="CPU Cache">
+    <meta name="tags" content="High-Frequency Trading">
+    <meta name="tags" content="Data-Oriented Design">
+    <meta name="tags" content="Low-Latency Programming">
+    <meta name="tags" content="C++ Memory Management">
+
+
+
+
+<!-- Open Graph -->
+<meta prefix="og: http://ogp.me/ns#" property="og:site_name" content="Between the Brackets"/>
+<meta prefix="og: http://ogp.me/ns#" property="og:title" content="Structure of Arrays (SoA) vs Array of Structures (AoS) in C++: A Deep Dive into Cache-Optimized Performance"/>
+<meta prefix="og: http://ogp.me/ns#" property="og:description" content="Learn how the way you structure your data, as a Structure of Arrays (SoA) or Array of Structures (AoS), can significantly affect..."/>
+<meta prefix="og: http://ogp.me/ns#" property="og:locale" content="en_US"/>
+<meta prefix="og: http://ogp.me/ns#" property="og:url" content="https://azad2171.github.io/soa_vs_aos_memory_layout_cpp/"/>
+<meta prefix="og: http://ogp.me/ns#" property="og:type" content="article"/>
+<meta prefix="og: http://ogp.me/ns#" property="article:published_time" content="2025-07-28 23:00:00+05:30"/>
+<meta prefix="og: http://ogp.me/ns#" property="article:modified_time" content=""/>
+<meta prefix="og: http://ogp.me/ns#" property="article:author" content="https://azad2171.github.io/author/lovekesh-azad.html">
+<meta prefix="og: http://ogp.me/ns#" property="article:section" content="Programming"/>
+<meta prefix="og: http://ogp.me/ns#" property="article:tag" content="C++"/>
+<meta prefix="og: http://ogp.me/ns#" property="article:tag" content="Structure of Arrays"/>
+<meta prefix="og: http://ogp.me/ns#" property="article:tag" content="Array of Structures"/>
+<meta prefix="og: http://ogp.me/ns#" property="article:tag" content="Memory Layout Optimization"/>
+<meta prefix="og: http://ogp.me/ns#" property="article:tag" content="CPU Cache"/>
+<meta prefix="og: http://ogp.me/ns#" property="article:tag" content="High-Frequency Trading"/>
+<meta prefix="og: http://ogp.me/ns#" property="article:tag" content="Data-Oriented Design"/>
+<meta prefix="og: http://ogp.me/ns#" property="article:tag" content="Low-Latency Programming"/>
+<meta prefix="og: http://ogp.me/ns#" property="article:tag" content="C++ Memory Management"/>
+<meta prefix="og: http://ogp.me/ns#" property="og:image" content="https://azad2171.github.io/theme/images/home-bg.jpg">
+
+<!-- Twitter Card -->
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Article",
+  "name": "Structure of Arrays (SoA) vs Array of Structures (AoS) in C++: A Deep Dive into Cache-Optimized Performance",
+  "headline": "Structure of Arrays (SoA) vs Array of Structures (AoS) in C++: A Deep Dive into Cache-Optimized Performance",
+  "datePublished": "2025-07-28 23:00:00+05:30",
+  "dateModified": "",
+  "author": {
+    "@type": "Person",
+    "name": "Lovekesh Azad",
+    "url": "https://azad2171.github.io/author/lovekesh-azad.html"
+  },
+  "image": "https://azad2171.github.io/theme/images/post-bg.jpg",
+  "url": "https://azad2171.github.io/soa_vs_aos_memory_layout_cpp/",
+  "description": "Learn how the way you structure your data, as a Structure of Arrays (SoA) or Array of Structures (AoS), can significantly affect..."
+}
+</script>
+</head>
+
+
+
+
+
+
+
+
+
+<body class="category-template">
+
+<div class="nav-header">
+  <nav class="nav-wrapper" aria-label="Main">
+<ul>
+
+    <li class="nav-Home " role="presentation"><a href="/"><span>Home</span></a></li>
+    <li class="nav-About the Author " role="presentation"><a href="/author/lovekesh-azad.html"><span>About the Author</span></a></li>
+
+</ul>
+<ul class="nav-meta">
+  <li class="nav-search" style="display: none;">
+    <a title="Search">
+      <i class="icon icon-search" aria-hidden="true"></i>
+      <span>Search</span>
+    </a>
+  </li>
+</ul>  </nav>
+
+  <div class="nav-wrapper-control">
+    <div class="inner">
+      <a class="nav-menu" role="button"><i class="icon icon-menu" aria-hidden="true"></i>Menu</a>
+      <a class="nav-search" title="Search" role="button" style="display: none;"><i class="icon icon-search" aria-hidden="true"></i></a>
+    </div>
+  </div>
+</div>
+<div class="nav-close" role="button" aria-label="Close"></div>
+  <section id="wrapper" class="page-wrapper">
+    <!-- Progressbar -->
+    <div class="progress-container">
+      <span class="progress-bar"></span>
+    </div>
+
+    <!-- Page Header -->
+    <!-- Set your background image for this header on the line below. -->
+    <header class="post-header ">
+      <div class="inner">
+        <span class="post-info">
+          <span class="post-type">Article</span>
+          <span class="post-count">Programming</span>
+        </span>
+        <h1 class="post-title">Structure of Arrays (SoA) vs Array of Structures (AoS) in C++: A Deep Dive into Cache-Optimized Performance</h1>
+        <div class="post-meta">
+          <div class="post-meta-avatars">
+
+
+            <figure class="post-meta-avatar avatar">
+              <a class="author-avatar" href="https://azad2171.github.io/author/lovekesh-azad.html">
+                <img class="author-profile-image" src="https://azad2171.github.io/authors/avatar.png" alt="Lovekesh Azad" />
+              </a>
+            </figure>
+          </div>
+
+          <h4 class="post-meta-author">
+            Lovekesh Azad
+          </h4>
+          <time datetime="Mon 28 July 2025">Mon 28 July 2025</time>
+        </div>
+      </div>
+    </header>
+
+    <!-- Post content -->
+    <main class="content" role="main">
+        <article class="post">
+        <div class="inner">
+          <section class="post-content">
+            <h1>How Memory Layout Affects Performance at the Nanosecond Level</h1>
+<p>In performance-critical systems, such as high-frequency trading (HFT), real-time games, or scientific simulations, writing fast code isn't just about algorithms. It's about understanding <strong>how your data moves through memory</strong>, and how that affects the CPU's ability to keep up.</p>
+<p>One of the most important, yet often overlooked, design choices is <strong>how you lay out your data in memory</strong>. This is the battle between:</p>
+<ul>
+<li><strong>Array of Structures (AoS)</strong> : intuitive, object-oriented, but potentially cache-hostile.</li>
+<li><strong>Structure of Arrays (SoA)</strong> : slightly more complex, but much more cache-friendly.</li>
+</ul>
+<p>Today, you'll see how changing your data layout (and nothing else) can yield up to <strong>40-60% performance improvement</strong> in real workloads.</p>
+<hr>
+<h2>The Problem: Same Computation, Different Performance</h2>
+<p>Imagine you're building a system to track the best bid and ask prices for 10 million stocks. All you need to do is sum up all the <strong>bid prices</strong> for some statistical or analytic purpose.</p>
+<p>Seems simple, right?</p>
+<p>Let’s look at two ways of structuring this data in C++.</p>
+<h3>Option 1: Array of Structures (AoS)</h3>
+<div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">StockData</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">bid</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">ask</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">StockData</span><span class="o">&gt;</span><span class="w"> </span><span class="n">data1</span><span class="p">(</span><span class="n">num_elements</span><span class="p">);</span>
+</code></pre></div>
+
+<p>Here, each <code>StockData</code> contains a bid and an ask. You store 10 million of them in a vector.</p>
+<p>In memory, this looks like:</p>
+<div class="highlight"><pre><span></span><code>[bid_0, ask_0, bid_1, ask_1, bid_2, ask_2, ...]
+</code></pre></div>
+
+<h3>Option 2: Structure of Arrays (SoA)</h3>
+<div class="highlight"><pre><span></span><code><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">bidV</span><span class="p">(</span><span class="n">num_elements</span><span class="p">);</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">askV</span><span class="p">(</span><span class="n">num_elements</span><span class="p">);</span>
+</code></pre></div>
+
+<p>Here, bids and asks are separated into two vectors.</p>
+<p>In memory:</p>
+<div class="highlight"><pre><span></span><code><span class="k">[bid_0, bid_1, bid_2, bid_3, ...]</span>
+<span class="k">[ask_0, ask_1, ask_2, ask_3, ...]</span>
+</code></pre></div>
+
+<hr>
+<h2>The Task: Sum All Bid Prices</h2>
+<p>We'll write two functions:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">double</span><span class="w"> </span><span class="nf">sumAoS</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">StockData</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">stock</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">sum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">stock</span><span class="p">.</span><span class="n">bid</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">sum</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">double</span><span class="w"> </span><span class="nf">sumSoA</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">bids</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">accumulate</span><span class="p">(</span><span class="n">bids</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">bids</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span><span class="w"> </span><span class="mf">0.0</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Each function does the same thing i.e. sum up 10 million double-precision numbers.</p>
+<hr>
+<h2>The Benchmark</h2>
+<p>When timed in Release mode, the results are:</p>
+<div class="highlight"><pre><span></span><code>AoS Time: ~16.8 milliseconds  
+SoA Time: ~11.7 milliseconds
+</code></pre></div>
+
+<p>A 43% performance improvement. <strong>Just from changing how the data is laid out in memory</strong>.</p>
+<p>But why?</p>
+<hr>
+<h2>The Science Behind It: CPU Memory Hierarchy</h2>
+<p>To understand this, you need to know how modern CPUs work with memory.</p>
+<p>When your program accesses memory, it doesn't go straight to RAM. That would be way too slow.</p>
+<p>Instead, it works through a <strong>multi-level memory hierarchy</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Size (Typical)</th>
+<th>Latency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CPU Registers</strong></td>
+<td>&lt; 1 KB</td>
+<td>&lt; 1 ns</td>
+</tr>
+<tr>
+<td><strong>L1 Cache</strong></td>
+<td>32-64 KB</td>
+<td>~1-2 ns</td>
+</tr>
+<tr>
+<td><strong>L2 Cache</strong></td>
+<td>256 KB-4 MB</td>
+<td>~5-10 ns</td>
+</tr>
+<tr>
+<td><strong>L3 Cache</strong></td>
+<td>8-64 MB</td>
+<td>~20-50 ns</td>
+</tr>
+<tr>
+<td><strong>RAM</strong></td>
+<td>GBs</td>
+<td>~100-200 ns</td>
+</tr>
+</tbody>
+</table>
+<p>When you access a variable:</p>
+<ul>
+<li>If it's in L1 cache: super fast.</li>
+<li>If it's in L2/L3: slower.</li>
+<li>If it's in RAM: <strong>painfully slow</strong>.</li>
+</ul>
+<p>That’s why keeping your data <strong>cache-friendly</strong> is one of the best things you can do for performance.</p>
+<hr>
+<h2>What Are Cache Lines?</h2>
+<p>CPUs don't read individual bytes. They read memory in chunks called <strong>cache lines</strong>, typically 64 bytes.</p>
+<p>A <code>double</code> is 8 bytes. So, one cache line holds 8 values.</p>
+<ul>
+<li>If you access <code>bid[0]</code>, the CPU loads <code>bid[0]</code> to <code>bid[7]</code> into L1 cache.</li>
+<li>If your code then accesses <code>bid[1]</code>, it’s already in cache -&gt; <strong>cache hit</strong>.</li>
+<li>If your code jumps to <code>bid[100000]</code>, that’s a <strong>cache miss</strong>. The CPU stalls while it fetches data from RAM.</li>
+</ul>
+<hr>
+<h2>The Hidden Cost of AoS</h2>
+<p>Let’s now compare what happens under each layout.</p>
+<h3>Structure of Arrays (SoA):</h3>
+<div class="highlight"><pre><span></span><code>[bid_0, bid_1, bid_2, ..., bid_7]  ← Cache Line 1
+</code></pre></div>
+
+<p>When you loop through <code>bidV</code>, you’re walking through memory <strong>sequentially</strong>. Every cache line is <strong>100% full of useful data</strong>.</p>
+<p>The hardware <strong>prefetcher</strong> sees this access pattern and starts preloading future cache lines. Your loop runs fast and smooth.</p>
+<hr>
+<h3>Array of Structures (AoS):</h3>
+<div class="highlight"><pre><span></span><code>[bid_0, ask_0, bid_1, ask_1, bid_2, ask_2, ...]
+</code></pre></div>
+
+<p>Now each cache line includes both bids <strong>and</strong> asks.</p>
+<p>If you're only summing bids:</p>
+<ul>
+<li>Half of every cache line is <strong>wasted</strong> (ask values).</li>
+<li>The CPU has to load more cache lines to reach the same amount of useful data.</li>
+<li>Cache lines are being evicted faster.</li>
+<li>Prefetching is less efficient.</li>
+</ul>
+<p><strong>End result:</strong> more cache misses, more memory traffic, more latency.</p>
+<hr>
+<h2>Real Cost of Cache Misses</h2>
+<p>Let’s say each bid access takes 1 ns with a cache hit, but 200 ns with a cache miss.</p>
+<p>If you sum 10 million bids:</p>
+<ul>
+<li>With 100% cache hits (SoA):<br>
+<code>10 million × 1 ns = 10 ms</code></li>
+<li>With 50% cache misses (AoS):<br>
+<code>5 million × 1 ns + 5 million × 200 ns = 1,000 ms</code></li>
+</ul>
+<p>This is an extreme example, but it shows why <strong>memory layout matters more than you think</strong>.</p>
+<hr>
+<h2>When to Use SoA vs. AoS</h2>
+<table>
+<thead>
+<tr>
+<th>Use Case</th>
+<th>Recommended Layout</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Processing all fields together (e.g., copy)</td>
+<td>AoS</td>
+</tr>
+<tr>
+<td>Processing one field (e.g., sum bids only)</td>
+<td>SoA</td>
+</tr>
+<tr>
+<td>SIMD/vectorization opportunities</td>
+<td>SoA</td>
+</tr>
+<tr>
+<td>Data serialization/deserialization</td>
+<td>AoS</td>
+</tr>
+<tr>
+<td>Tight loops and data locality optimizations</td>
+<td>SoA</td>
+</tr>
+<tr>
+<td>Object-oriented modeling and encapsulation</td>
+<td>AoS</td>
+</tr>
+</tbody>
+</table>
+<p>In data-intensive systems like trading platforms or simulation engines, the benefits of SoA can be massive, especially in hot code paths.</p>
+<hr>
+<h2>Final Thoughts</h2>
+<p>If you're coming from a high-level language like Python, you've probably never had to think about cache lines, prefetchers, or memory layout. But in C++, these are first-class concerns, especially if you're writing code where <strong>nanoseconds matter</strong>.</p>
+<p>In the world of HFT and systems programming: </p>
+<ul>
+<li><strong>SoA is your friend</strong> for performance.</li>
+<li><strong>AoS is your friend</strong> for readability and structure.</li>
+</ul>
+<p>Understanding when to use each can be the difference between good code and <strong>code that screams</strong>.</p>
+<hr>
+<blockquote>
+<p>“Write code for humans. Lay out data for machines.”<br>
+— <em>Modern C++ wisdom</em></p>
+</blockquote>
+          </section>
+
+
+          <section class="post-footer" >
+            <div class="post-share">
+              <span class="post-info-label">Share</span>
+              <a title="Twitter" aria-label="Twitter" class="twitter" href="https://twitter.com/share?text=Structure of Arrays (SoA) vs Array of Structures (AoS) in C++: A Deep Dive into Cache-Optimized Performance&amp;url=https://azad2171.github.io/soa_vs_aos_memory_layout_cpp/" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                <i class="icon icon-twitter" aria-hidden="true"></i><span class="hidden">Twitter</span>
+              </a>
+              <a title="Facebook" aria-label="Facebook" class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://azad2171.github.io/soa_vs_aos_memory_layout_cpp/" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                <i class="icon icon-facebook" aria-hidden="true"></i><span class="hidden">Facebook</span>
+              </a>
+              <a title="LinkedIn" aria-label="LinkedIn" class="linkedin" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https://azad2171.github.io/soa_vs_aos_memory_layout_cpp/&amp;title=Structure of Arrays (SoA) vs Array of Structures (AoS) in C++: A Deep Dive into Cache-Optimized Performance" onclick="window.open(this.href, 'linkedin-share', 'width=930,height=720');return false;">
+                <i class="icon icon-linkedin" aria-hidden="true"></i><span class="hidden">LinkedIn</span>
+              </a>
+              <a title="Email" aria-label="Email" class="email" href="mailto:?subject=Structure of Arrays (SoA) vs Array of Structures (AoS) in C++: A Deep Dive into Cache-Optimized Performance&amp;body=https://azad2171.github.io/soa_vs_aos_memory_layout_cpp/">
+                <i class="icon icon-mail" aria-hidden="true"></i><span class="hidden">Email</span>
+              </a>
+              <div class="clear"></div>
+            </div>
+
+            <aside class="post-tags">
+<a href="https://azad2171.github.io/tag/c.html">C++</a><a href="https://azad2171.github.io/tag/structure-of-arrays.html">Structure of Arrays</a><a href="https://azad2171.github.io/tag/array-of-structures.html">Array of Structures</a><a href="https://azad2171.github.io/tag/memory-layout-optimization.html">Memory Layout Optimization</a><a href="https://azad2171.github.io/tag/cpu-cache.html">CPU Cache</a><a href="https://azad2171.github.io/tag/high-frequency-trading.html">High-Frequency Trading</a><a href="https://azad2171.github.io/tag/data-oriented-design.html">Data-Oriented Design</a><a href="https://azad2171.github.io/tag/low-latency-programming.html">Low-Latency Programming</a><a href="https://azad2171.github.io/tag/c-memory-management.html">C++ Memory Management</a>            </aside>
+
+            <div class="clear"></div>
+
+
+          </section>
+
+
+          <aside class="post-nav">
+            <a class="post-nav-prev" href="https://azad2171.github.io/why-your-cpp-loop-might-not-be-running/">
+              <section class="post-nav-teaser">
+                <i class="icon icon-arrow-right"></i>
+                  <h2 class="post-nav-title">Why Your C++ Loop Might Not Run: Volatile & Compiler Optimizations</h2>
+                <p class="post-nav-excerpt">Learn how the volatile keyword and compiler optimizations affect control flow in...</p>
+                <p class="post-nav-meta"><time datetime="Sun 20 July 2025">Sun 20 July 2025</time></p>
+              </section>
+            </a>
+            <div class="clear"></div>
+          </aside>
+
+        </div>
+      </article>
+    </main>
+    <div class="nav-footer">
+      <nav class="nav-wrapper" aria-label="Footer">
+        <span class="nav-copy">Between the Brackets &copy; 2025
+        </span>
+        <span class="nav-credits">
+
+
+
+          Published with <a href="https://github.com/getpelican/pelican" rel="nofollow">Pelican</a> &bull; Theme <a href="https://github.com/arulrajnet/attila" rel="nofollow">Attila</a> &bull;
+          <a class="menu-item js-theme" href="#" data-system="System theme" data-dark="Dark theme" data-light="Light theme">
+            <span class="theme-icon"></span><span class="theme-text">System theme</span>
+          </a>
+        </span>
+      </nav>
+    </div>
+
+  </section>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+  <script type="text/javascript" src="https://azad2171.github.io/theme/js/jquery.fitvids.js"></script>
+  <script type="text/javascript" src="https://azad2171.github.io/theme/js/script.js"></script>
+
+    <!-- Global Site Tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7Y574CSESH"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-7Y574CSESH', { 'anonymize_ip': true });
+    </script>
+
+  <!-- 	The #block helper will pull in data from the #contentFor other template files. In this case, there's some JavaScript which we only want to use in article.html, but it needs to be included down here, after jQuery has already loaded. -->
+
+<!-- Add MathJax and FontAwesome for Asciidoc -->\
+<script>
+  $(document).ready(function () {
+    var viewport = $(window);
+    var post = $('.post-content');
+    // Responsive videos with fitVids
+    post.fitVids();
+
+    var mdSelector=".highlight pre";
+    var rstSelector=".highlight pre";
+    // For ":source-highlighter: highlight.js`" in asciidoc
+    var adocSelector="pre.highlight > code[data-lang]"
+    var selector=mdSelector;
+    // Format code blocks and add line numbers
+    function codestyling() {
+      $(selector).each(function(i, e) {
+        // Code highlight
+        hljs.highlightElement(e);
+        // No lines for plain text blocks
+        if (!$(this).hasClass('language-text')) {
+          var code = $(this);
+          // Calculate amount of lines
+          var lines = code.html().split(/\n(?!$)/g).length;
+          var numbers = [];
+          if (lines > 1) {
+            lines++;
+          }
+          for (i = 1; i < lines; i++) {
+            numbers += '<span class="line" aria-hidden="true">' + i + '</span>';
+          }
+          code.parent().append('<div class="lines">' + numbers + '</div>');
+        }
+      });
+    }
+
+    // Format code blocks only
+    function codestylingWithoutLineNumbers() {
+      $(selector).each(function(i, e) {
+        // Code highlight
+        hljs.highlightElement(e);
+      });
+    }
+
+    codestylingWithoutLineNumbers();
+    // Reading progress bar on window top
+    function readingProgress() {
+      var postBottom = post.offset().top + post.height();
+      var viewportHeight = viewport.height();
+      var progress = 100 - (((postBottom - (viewport.scrollTop() + viewportHeight) + viewportHeight / 3) / (postBottom - viewportHeight + viewportHeight / 3)) * 100);
+      $('.progress-bar').css('width', progress + '%');
+      (progress > 100) ? $('.progress-container').addClass('complete'): $('.progress-container').removeClass('complete');
+    }
+    readingProgress();
+    // Trigger reading progress
+    viewport.on({
+      'scroll': function() {
+        readingProgress();
+      },
+      'resize': function() {
+        readingProgress();
+      },
+      'orientationchange': function() {
+        readingProgress();
+      }
+    });
+
+  });
+</script>
+</body>
+
+</html>

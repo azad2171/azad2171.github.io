@@ -6,49 +6,49 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://azad2171.github.io/</loc>
-<lastmod>2025-07-25T18:08:18-00:00</lastmod>
+<lastmod>2025-07-28T19:09:37-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://azad2171.github.io/archives.html</loc>
-<lastmod>2025-07-25T18:08:18-00:00</lastmod>
+<lastmod>2025-07-28T19:09:37-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://azad2171.github.io/author/lovekesh-azad.html</loc>
-<lastmod>2025-07-25T18:08:18-00:00</lastmod>
+<lastmod>2025-07-28T19:09:37-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://azad2171.github.io/authors.html</loc>
-<lastmod>2025-07-25T18:08:18-00:00</lastmod>
+<lastmod>2025-07-28T19:09:37-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://azad2171.github.io/categories.html</loc>
-<lastmod>2025-07-25T18:08:18-00:00</lastmod>
+<lastmod>2025-07-28T19:09:37-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://azad2171.github.io/category/misc.html</loc>
-<lastmod>2025-07-25T18:08:18-00:00</lastmod>
+<lastmod>2025-07-28T19:09:37-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://azad2171.github.io/category/programming.html</loc>
-<lastmod>2025-07-25T18:08:18-00:00</lastmod>
+<lastmod>2025-07-28T19:09:37-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -61,71 +61,127 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
+<loc>https://azad2171.github.io/soa_vs_aos_memory_layout_cpp/</loc>
+<lastmod>2025-07-28T23:00:00+05:30</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+
+<url>
+<loc>https://azad2171.github.io/tag/array-of-structures.html</loc>
+<lastmod>2025-07-28T19:09:37-00:00</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://azad2171.github.io/tag/c-memory-management.html</loc>
+<lastmod>2025-07-28T19:09:37-00:00</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
 <loc>https://azad2171.github.io/tag/c.html</loc>
-<lastmod>2025-07-25T18:08:18-00:00</lastmod>
+<lastmod>2025-07-28T19:09:37-00:00</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://azad2171.github.io/tag/cpu-cache.html</loc>
+<lastmod>2025-07-28T19:09:37-00:00</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://azad2171.github.io/tag/data-oriented-design.html</loc>
+<lastmod>2025-07-28T19:09:37-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://azad2171.github.io/tag/floating-point.html</loc>
-<lastmod>2025-07-25T18:08:18-00:00</lastmod>
+<lastmod>2025-07-28T19:09:37-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://azad2171.github.io/tag/hft.html</loc>
-<lastmod>2025-07-25T18:08:18-00:00</lastmod>
+<lastmod>2025-07-28T19:09:37-00:00</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://azad2171.github.io/tag/high-frequency-trading.html</loc>
+<lastmod>2025-07-28T19:09:37-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://azad2171.github.io/tag/low-latency-programming.html</loc>
-<lastmod>2025-07-25T18:08:18-00:00</lastmod>
+<lastmod>2025-07-28T19:09:37-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://azad2171.github.io/tag/low-latency.html</loc>
-<lastmod>2025-07-25T18:08:18-00:00</lastmod>
+<lastmod>2025-07-28T19:09:37-00:00</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://azad2171.github.io/tag/memory-layout-optimization.html</loc>
+<lastmod>2025-07-28T19:09:37-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://azad2171.github.io/tag/optimization.html</loc>
-<lastmod>2025-07-25T18:08:18-00:00</lastmod>
+<lastmod>2025-07-28T19:09:37-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://azad2171.github.io/tag/performance-optimization.html</loc>
-<lastmod>2025-07-25T18:08:18-00:00</lastmod>
+<lastmod>2025-07-28T19:09:37-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://azad2171.github.io/tag/performance.html</loc>
-<lastmod>2025-07-25T18:08:18-00:00</lastmod>
+<lastmod>2025-07-28T19:09:37-00:00</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://azad2171.github.io/tag/structure-of-arrays.html</loc>
+<lastmod>2025-07-28T19:09:37-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://azad2171.github.io/tag/volatile.html</loc>
-<lastmod>2025-07-25T18:08:18-00:00</lastmod>
+<lastmod>2025-07-28T19:09:37-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://azad2171.github.io/tags.html</loc>
-<lastmod>2025-07-25T18:08:18-00:00</lastmod>
+<lastmod>2025-07-28T19:09:37-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
